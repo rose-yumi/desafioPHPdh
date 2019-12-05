@@ -1,6 +1,5 @@
 
 <?php
-
 //indexProdutos.php
 
 $produtosJson = file_get_contents('./includes/produtos.json');

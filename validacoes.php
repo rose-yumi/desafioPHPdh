@@ -21,6 +21,11 @@ function checarNome($str)
 function checarPreco($num)
 {
     // Verificando se é número
+
+    if (is_numeric($num)) {
+        return false;
+    }
+
     if ($num < 0) {
         return false;
     }

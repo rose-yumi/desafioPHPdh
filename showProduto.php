@@ -1,5 +1,4 @@
 <?php
-
 //showProduto.php
 
 $produtosJson = file_get_contents('./includes/produtos.json');
@@ -8,41 +7,25 @@ $arrayProdutos = json_decode($produtosJson, true);
 
 $id = $_GET['id'];
 
-$produto = $arrayProdutos[$id];
+$produtos = $arrayProdutos[$id];
 
 if ($_POST) {
-    $deletou = deleteProduto($_POST['id']);
 
-    if ($deletou) {
-      header('Location: indexProdutos.php');
-	}
-	
+	foreach($arrayProdutos as $key => $produto)
+		if ($produto['id'] == $id) {
+		array_splice($arrayProdutos, $key, 1);
 
-	function deleteProduto($id) {
-		$produtos = getProdutos();
-	
-		foreach($produtos as $index => $produto)
-		  if ($produto['id'] == $id) {
-			array_splice($produtos, $index, 1);
-	
-			$json_produtos = json_encode($produtos);
-			return file_put_contents(ARQUIVO, $json_produtos);
-		  }
-		
-		return false;
-	  }
-
-
-	foreach ($createdProducts as $key => $user) {
-		if ($user['id'] == $id) {
-			array_splice($createdProducts, $key, 1);
-	
-			$createdProducts = json_encode($createdProducts);
-			file_put_contents(ARQPROD, $createdProducts);
+		$arrayProdutos = json_encode($arrayProdutos);
+		$deletar = file_put_contents('./includes/produtos.json', $arrayProdutos);
 		}
+		
+	if ($deletar) {
+		header('Location: indexProdutos.php');
 	}
+}
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,11 +64,11 @@ if ($_POST) {
 	<div class="container my-4">
         <div class="col-md-12 mx-auto">
             <div class="card">
-                <img src="<?= $produto['foto'] ?>" class="card-img-top" alt="...">
+                <img src="<?= $produtos['foto'] ?>" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h4 class="card-title"><?= $produto['nome'] ?></h4>
-                    <p class="card-text"><?= $produto['descricao'] ?></p>
-                    <h5 class="pb-5">R$ <?= $produto['preco'] ?></h5>
+                    <h4 class="card-title"><?= $produtos['nome'] ?></h4>
+                    <p class="card-text"><?= $produtos['descricao'] ?></p>
+                    <h5 class="pb-5">R$ <?= $produtos['preco'] ?></h5>
                     <form action="" method="POST" class="d-flex justify-content-around">
                         <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
                         <a href="indexProdutos.php" class="btn btn-secondary">Voltar</a>
