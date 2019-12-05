@@ -99,19 +99,22 @@ if ($_POST) {
 
 	<!-- Barra de Navegação -->
 	<header>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-        <div class="container">
-          <a class="navbar-brand" href="indexProdutos.php">Desafio PHP Estruturado</a>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-              <a class="nav-item nav-link active" href="indexProdutos.php">Home <span class="sr-only">(current)</span></a>
-              <a class="nav-item nav-link active" href="createProduto.php">Adicionar produto</a>
-              <a class="nav-item nav-link active" href="createUsuario.php">Usuários</a>
-            </div>
-          </div>
-          <a class="text-white" href="functions/logout.php">Logout</a>
-        </div>
-      </nav>
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<div class="container">
+				<a class="navbar-brand" href="indexProdutos.php">Desafio PHP Estruturado</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav w-100 d-flex justify-content-around">
+					<a class="nav-link" href="createUsuario.php">Usuários</a>
+					<a class="nav-link" href="indexProdutos.php">Lista de Produtos</a>
+					<a class="nav-item nav-link active" href="createProduto.php">Cadastrar Produtos<span class="sr-only">(current)</span></a>
+					<a class="nav-link" href="logout.php">Logout</a>
+					</div>
+				</div>
+			</div>
+		</nav>
     </header>
 
 	<!-- Formulário -->
