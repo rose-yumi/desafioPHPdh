@@ -55,7 +55,7 @@ if ($_POST) {
 	// Acrescentando id do Produto
 	
 	if (empty($arrayProdutos)) {
-		$id = 1;
+		$id = 0;
 		$arrayProdutos = [];
 	} else {
 		$id = (end($arrayProdutos)['id']) + 1;
@@ -99,7 +99,7 @@ if ($_POST) {
 
 	<!-- Barra de Navegação -->
 	<header>
-		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+		<nav class="navbar navbar-expand-md navbar-dark bg-secondary">
 			<div class="container">
 				<a class="navbar-brand" href="indexProdutos.php">Desafio PHP Estruturado</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">

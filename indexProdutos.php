@@ -24,7 +24,7 @@ $arrayProdutos = json_decode($produtosJson, true);
 
 	<!-- Barra de Navegação -->
 	<header>
-		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+		<nav class="navbar navbar-expand-md navbar-dark bg-secondary">
 			<div class="container">
 				<a class="navbar-brand" href="indexProdutos.php">Desafio PHP Estruturado</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,10 +42,10 @@ $arrayProdutos = json_decode($produtosJson, true);
 		</nav>
     </header>
 
-	<!-- Formulário -->
+	<!-- Tabela de Produtos -->
 	<div class="container">
         <h5 class="display-7 text-center my-3">Lista de Produtos</h5>
-        <table class="table table-striped col-12">
+        <table class="table table-striped col-12 text-center">
             <thead>
                 <tr>
                     <th scope="col">Id</th>
@@ -63,8 +63,8 @@ $arrayProdutos = json_decode($produtosJson, true);
                         <td><?= $produto['descricao'] ?></td>
                         <td>R$ <?= $produto['preco'] ?></td>
                         <td>
-                        <a href="editProduto.php?id=<?= $produto['id'] ?>" class="btn btn-outline-primary">Editar</a>
-                        <a href="showProduto.php?id=<?= $produto['id'] ?>" class="btn btn-outline-danger">Excluir</a>
+                        <a href="editProduto.php?id=<?= $produto['id'] ?>" class="btn btn-secondary">Editar</a>
+                        <a href="showProduto.php?id=<?= $produto['id'] ?>" class="btn btn-danger">Ver</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>    
