@@ -31,49 +31,56 @@ if ($_POST) {
       empty($ok['email']) &&
       empty($ok['senha'])
     ){
-      $novoUsuario = [
+        
+    $usuariosJson = file_get_contents('./includes/usuarios.json');
+    $usuariosArray = json_decode($usuariosJson, true);
+
+    if (empty($usuariosArray)) {
+        $usuariosArray = [];
+        $novoUsuario['id'] = 0;
+    } else {
+        $novoUsuario['id'] = ++end($usuariosArray)['id'];    
+    }
+
+    $novoUsuario = [
+        'id' => $novoUsuario['id'],
         'nome' => $_POST['nome'],
         'email' => $_POST['email'],
         'senha' => password_hash($_POST['senha'], PASSWORD_DEFAULT),
-      ];
+    ];
 
-      $usuariosJson = file_get_contents('./includes/usuarios.json');
-      $usuariosArray = json_decode($usuariosJson, true);
-  
-      $usuariosArray[] = $novoUsuario;
-  
-      $novousuariosJson = json_encode($usuariosArray);
-  
-      $cadastrou = file_put_contents('./includes/usuarios.json', $novousuariosJson);
-  
-      if ($cadastrou) {
-          header('Location: login.php');
-      }
+    $usuariosArray[] = $novoUsuario;
+
+    $novousuariosJson = json_encode($usuariosArray);
+
+    $cadastrou = file_put_contents('./includes/usuarios.json', $novousuariosJson);
+    
+        if ($cadastrou) {
+            header('Location: login.php');
+        }
     }
 }
 
-    if ($_GET && $_GET['id']) {
-        if (!$_SESSION['usuario']) return header('Location: createUsuario.php');
+if ($_GET && $_GET['id']) {
 
-        $id = $_GET['id'];
+    $id = $_GET['id'];
 
-        function deletarUsuario($id) {
-            $usuariosJson = file_get_contents('./includes/usuarios.json');
-            $usuariosArray = json_decode($usuariosJson, true);
-    
-            foreach($usuariosArray as $index => $usuario)
-            if ($usuario['id'] == $id) {
-                array_splice($usuariosArray, $index, 1);
-        
-                $usuariosJson = json_encode($usuariosArray);
-                return file_put_contents('./includes/usuarios.json', $usuariosJson);
-            }
-            return false;
-        }
-    }
+    if (!$_SESSION['usuario']) return header('Location: createUsuario.php');
 
     $usuariosJson = file_get_contents('./includes/usuarios.json');
     $usuariosArray = json_decode($usuariosJson, true);
+
+    foreach($usuariosArray as $index => $usuario)
+    if ($usuario['id'] == $id) {
+        array_splice($usuariosArray, $index, 1);
+
+        $usuariosJson = json_encode($usuariosArray);
+        return file_put_contents('./includes/usuarios.json', $usuariosJson);
+    }
+}
+
+$usuariosJson = file_get_contents('./includes/usuarios.json');
+$usuariosArray = json_decode($usuariosJson, true);
 
 ?>
 
@@ -179,7 +186,7 @@ if ($_POST) {
                             <p class="m-0 my-2"><?= $usuario['email'] ?></p>
                             </div>
                             <div class="col-md-4 row">
-                            <a href="editUsuarios.php?id=<?= $usuario['id'] ?>" class="btn btn-secondary col mt-2">Editar</a>
+                            <a href="editUsuario.php?id=<?= $usuario['id'] ?>" class="btn btn-secondary col mt-2">Editar</a>
                             <form class="w-100" action="" method="GET">
                                 <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
                                 <button class="btn btn-danger col my-2">Excluir</button>
