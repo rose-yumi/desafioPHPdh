@@ -1,78 +1,86 @@
 <?php
+//editProduto.php
 
-//createProduto.php
+// Trazendo a lista de Produtos
+$produtosJson = file_get_contents('./includes/produtos.json');	
+$produtos = json_decode($produtosJson, true);
 
-// Includes
-include 'validacoes.php';
+$id = $_GET['id'];
 
-// Definindo valores padroes para Nome
-$ok_nome = true;
-$nome = "";
-
-// Verificando se o formulário foi enviado
-if ($_POST) {
-
-    // Validando se o nome foi digitado
-	$ok_nome = checarNome($_POST['nome']);
-
-    // Atribuindo o valor do $_POST['nome'] a $nome
-    $nome = $_POST['nome'];
-
+foreach($produtos as $produto) {
+    if ($produto['id'] == $id) {
+        $nome = $produto['nome'];
+        $preco = $produto['preco'];
+        $foto = $produto['foto'];
+        if (!empty($produto['descricao'])) {
+            $descricao = $produto['descricao'];
+        }
+    }
 }
 
-// Definindo valores padroes para Preço
-$ok_preco = true;
-$preco = "";
-
-// Verificando se o formulário foi enviado
-if ($_POST) {
-
-    // Validando se o nome foi digitado
-	$ok_preco = checarPreco($_POST['preco']);
-	
-    // Atribuindo o valor do $_POST['preco'] a $preco
-    $preco = $_POST['preco'];
-
-}
+//Validando Dados enviados
+$okNome = true;
+$okPreco = true;
+$okFoto = true;
 
 if ($_POST) {
 
-	if ($_FILES['foto']['error'] == 0) {
-		$nomeFoto = $_FILES['foto']['name'];
-		$caminhoTmp = $_FILES['foto']['tmp_name'];
-		move_uploaded_file($caminhoTmp,'./assets/img/fotos/' . $nomeFoto);
-	}
-		$produtosJson = file_get_contents('./includes/produtos.json');	
-		$arrayProdutos = json_decode($produtosJson, true);
+    if (empty($_POST['nome'])) {
+        $okNome = false;
+    }
 
-	// Acrescentando id do Produto
-	
-	if (empty($arrayProdutos)) {
-		$id = 0;
-		$arrayProdutos = [];
-	} else {
-		$id = (end($arrayProdutos)['id']) + 1;
-	}
+    if (empty($_POST['preco'])) {
+        $okPreco = false;
+    }
+    if (($_FILES['foto']['error']) != 0) {
+        $okFoto = false;
+    }
 
-	// Array do novo Produto
-	$novoProduto = [
-		'id' => $id,
-		'nome' => $nome,			
-		'preco' => $preco,			
-		'descricao' => $_POST['descricao'],			
-		'foto' => $nomeFoto	
-	];
+    if (empty($_POST['descricao'])) {
+        $descricao = "";
+    } else {
+        $descricao = $_POST['descricao'];
+    }
 
-	// Salavando novo Produto
-	$arrayProdutos[] = $novoProduto;
+    if ($okNome && $okPreco && $okFoto) {
+        $nomeFoto = $_FILES['foto']['name'];
+        $caminhoTmp = $_FILES['foto']['tmp_name'];
+        move_uploaded_file($caminhoTmp, './assets/img/' . $nomeFoto);
+        $nome = $_POST['nome'];
+        $preco = $_POST['preco'];
+    }
 
-	$novoProdutosJson = json_encode($arrayProdutos);
+    $produtosJson = file_get_contents('./includes/produtos.json');	
+    $produtos = json_decode($produtosJson, true);
 
-	$salvou = file_put_contents('./includes/produtos.json', $novoProdutosJson);
-	
-	if ($salvou) {
-		header('Location: indexProdutos.php');
-	}
+    // Acrescentando id do Produto
+
+    if (empty($produtos)) {
+        $id = 0;
+        $produtos = [];
+    } else {
+        $id = ++end($produtos)['id'];
+    }
+
+    // Array do novo Produto
+    $novoProduto = [
+        'id' => $id,
+        'nome' => $nome,			
+        'preco' => $preco,			
+        'descricao' => $descricao,			
+        'foto' => $nomeFoto	
+    ];
+
+    // Salavando novo Produto
+    $produtos[] = $novoProduto;
+
+    $novoProdutosJson = json_encode($produtos);
+
+    $editou = file_put_contents('./includes/produtos.json', $novoProdutosJson);
+
+    if ($editou) {
+        header('Location: indexProdutos.php');
+    }
 }
 
 ?>
@@ -113,7 +121,7 @@ if ($_POST) {
 	<!-- Formulário -->
 	<div class="container">
 
-		<h5 class="display-7 text-center mt-3">Cadastro de Produtos</h5>
+		<h5 class="display-7 text-center mt-3">Editar dados dos Produtos</h5>
 		
 		<form method="POST" enctype="multipart/form-data">
 
@@ -123,11 +131,11 @@ if ($_POST) {
 					name="nome"
 					type="text"
 					id="nome"
-					class="form-control <?php if (!$ok_nome) {echo ('is-invalid');}?>"
-					placeholder="Digite o nome do Produto"
+					class="form-control <?php if (!$okNome) {echo ('is-invalid');}?>"
+					value="<?= $produto['nome'] ?>"
 					required
 				>
-					<?php if (!$ok_nome): ?>
+					<?php if (!$okNome): ?>
 						<div class="invalid-feedback">Nome inválido.</div>
 					<?php endif;?>
 			</div>
@@ -136,13 +144,13 @@ if ($_POST) {
 				<label for="preco">Preço</label>
 				<input
 					type="number"
-					class="form-control <?php if (!$ok_preco) {echo ('is-invalid');}?>"
+					class="form-control <?php if (!$okPreco) {echo ('is-invalid');}?>"
 					name="preco"
 					id="preco"
-					placeholder="Digite o preço do produto"
+					value="<?= $produto['preco'] ?>"
 					required
 				>
-					<?php if (!$ok_preco): ?>
+					<?php if (!$okPreco): ?>
 						<div class="invalid-feedback">Preço inválido.</div>
 					<?php endif;?>
 			</div>
@@ -155,23 +163,25 @@ if ($_POST) {
 					cols="30"
 					rows="5"
 					class="form-control"
-					placeholder="Digite a descrição do Produto"
+					value="<?= $produto['descricao'] ?>"
 				>
 				</textarea>
 			</div>
 
 			<div class="form-group col-12 my-3">
 				<label for="foto">Selecione a foto do Produto</label>
-				<input class="form-control-file"
+				<input class="form-control-file <?php if (!$okFoto) {echo ('is-invalid');}?>"
 					name="foto"
 					type="file"
 					id="foto"
 					required
 				>
-				<div class="invalid-feedback">Arquivo inválido</div>
+				<?php if (!$okFoto): ?>
+                    <div class="invalid-feedback">Arquivo inválido.</div>
+                <?php endif;?>
 			</div>
 
-			<button class="btn btn-secondary" type="submit">Cadastrar Produto</button>
+			<button class="btn btn-secondary" type="submit">Editar</button>
 		</form>
 	</div>
 

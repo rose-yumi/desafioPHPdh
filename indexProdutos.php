@@ -4,7 +4,7 @@
 
 $produtosJson = file_get_contents('./includes/produtos.json');
 		
-$arrayProdutos = json_decode($produtosJson, true);
+$produtos = json_decode($produtosJson, true);
 
 ?>
 <!DOCTYPE html>
@@ -55,7 +55,7 @@ $arrayProdutos = json_decode($produtosJson, true);
                 </tr>   
             </thead>
             <tbody>
-                <?php foreach($arrayProdutos as $produto) : ?>    
+                <?php foreach($produtos as $produto) : ?>    
                     <tr>
                         <th scope="row"><?= $produto['id'] ?></th>
                         <td><?= $produto['nome'] ?></td>

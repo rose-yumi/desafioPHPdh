@@ -41,7 +41,7 @@ if ($_POST) {
 	if ($_FILES['foto']['error'] == 0) {
 		$nomeFoto = $_FILES['foto']['name'];
 		$caminhoTmp = $_FILES['foto']['tmp_name'];
-		move_uploaded_file($caminhoTmp,'./assets/img/fotos/' . $nomeFoto);
+		move_uploaded_file($caminhoTmp,'./assets/img/' . $nomeFoto);
 	}
 		$produtosJson = file_get_contents('./includes/produtos.json');	
 		$arrayProdutos = json_decode($produtosJson, true);

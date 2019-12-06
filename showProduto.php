@@ -6,8 +6,9 @@ $produtosJson = file_get_contents('./includes/produtos.json');
 $arrayProdutos = json_decode($produtosJson, true);
 
 $id = $_GET['id'];
-
+// print_r($id);
 $produtos = $arrayProdutos[$id];
+// print_r($produtos);
 
 if ($_POST) {
 
@@ -18,7 +19,7 @@ if ($_POST) {
 		$arrayProdutos = json_encode($arrayProdutos);
 		$deletar = file_put_contents('./includes/produtos.json', $arrayProdutos);
 		}
-		
+
 	if ($deletar) {
 		header('Location: indexProdutos.php');
 	}
@@ -64,7 +65,7 @@ if ($_POST) {
 	<div class="container my-4">
         <div class="col-md-12 mx-auto">
             <div class="card">
-                <img src="<?= $produtos['foto'] ?>" class="card-img-top" alt="...">
+                <img src="./assets/img/<?= $produtos['foto'] ?>" class="card-img-top w-40" alt="...">
                 <div class="card-body">
                     <h4 class="card-title"><?= $produtos['nome'] ?></h4>
                     <p class="card-text"><?= $produtos['descricao'] ?></p>
