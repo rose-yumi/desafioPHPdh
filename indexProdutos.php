@@ -62,8 +62,8 @@ $produtos = json_decode($produtosJson, true);
                         <td><?= $produto['descricao'] ?></td>
                         <td>R$ <?= $produto['preco'] ?></td>
                         <td>
-                        <a href="editProduto.php?id=<?= $produto['id'] ?>" class="btn btn-secondary">Editar</a>
-                        <a href="showProduto.php?id=<?= $produto['id'] ?>" class="btn btn-danger">Ver</a>
+                        <a href="editProduto.php?id=<?= $produto['id'] ?>" class="btn btn-secondary w-20 mb-2 col">Editar</a>
+                        <a href="showProduto.php?id=<?= $produto['id'] ?>" class="btn btn-danger col">Ver</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>    

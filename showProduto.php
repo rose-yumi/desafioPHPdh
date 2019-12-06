@@ -52,7 +52,7 @@ if ($_POST) {
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div class="navbar-nav w-100 d-flex justify-content-around">
 					<a class="nav-link" href="createUsuario.php">Usuários</a>
-                    <a class="nav-item nav-link active" href="indexProdutos.php">Lista de Produtos<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="indexProdutos.php">Lista de Produtos</a>
 					<a class="nav-link" href="createProduto.php">Cadastrar Produtos</a>
 					<a class="nav-link" href="logout.php">Logout</a>
 					</div>

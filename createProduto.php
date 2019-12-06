@@ -4,7 +4,7 @@
 //createProduto.php
 
 // Includes
-include 'validacoes.php';
+include './includes/validacoes.php';
 
 // Definindo valores padroes para Nome
 $ok_nome = true;
