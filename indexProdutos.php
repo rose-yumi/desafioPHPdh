@@ -1,6 +1,10 @@
-
 <?php
-//indexProdutos.php
+
+session_start();
+if (!$_SESSION['usuario']){
+
+	header('location: login.php');
+}
 
 $produtosJson = file_get_contents('./includes/produtos.json');
 		

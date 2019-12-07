@@ -1,8 +1,5 @@
 <?php
 
-//createUsuario.php
-
-session_start();
 if ($_POST) {
     $ok = [
       'nome' => '',

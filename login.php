@@ -1,6 +1,6 @@
 <?php
 
-//login.php
+session_start();
 
 if ($_POST) {
     $usuariosJson = file_get_contents('./includes/usuarios.json');
@@ -8,6 +8,8 @@ if ($_POST) {
 
     foreach ($usuariosArray as $usuario) {
         if ($_POST['email'] == $usuario['email'] && password_verify($_POST['senha'], $usuario['senha'])) {
+            
+            $_SESSION['usuario'] = $usuario;            
             return header('Location: indexProdutos.php');
         }       
     }
@@ -46,9 +48,6 @@ if ($_POST) {
 
 		<h5 class="display-7 text-center mt-3">Login</h5>
 
-        <?php if (isset($erro)) { ?>
-            <div class="alert alert-danger"><?= $erro ?></div>
-        <?php } ?>
             <form method='post' action="login.php">
             <div class="form-group mt-3">
                 <label for="exampleInputEmail1">Email</label>
@@ -72,6 +71,9 @@ if ($_POST) {
                     placeholder="Senha"
                 >
             </div>
+            <?php if (isset($erro)) { ?>
+                <div class="alert alert-danger"><?= $erro ?></div>
+            <?php } ?>
                 <button type="submit" class="btn btn-secondary mb-2">Enviar</button>
             </form>
             <a href="./createUsuario.php">Não sou cadastrado - Criar cadastro</a>

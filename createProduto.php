@@ -1,79 +1,70 @@
 
 <?php
 
-//createProduto.php
-
-// Includes
-include './includes/validacoes.php';
-
-// Definindo valores padroes para Nome
-$ok_nome = true;
-$nome = "";
-
-// Verificando se o formulário foi enviado
-if ($_POST) {
-
-    // Validando se o nome foi digitado
-	$ok_nome = checarNome($_POST['nome']);
-
-    // Atribuindo o valor do $_POST['nome'] a $nome
-    $nome = $_POST['nome'];
-
-}
-
-// Definindo valores padroes para Preço
-$ok_preco = true;
-$preco = "";
-
-// Verificando se o formulário foi enviado
-if ($_POST) {
-
-    // Validando se o nome foi digitado
-	$ok_preco = checarPreco($_POST['preco']);
-	
-    // Atribuindo o valor do $_POST['preco'] a $preco
-    $preco = $_POST['preco'];
-
+session_start();
+if (!$_SESSION['usuario']){
+	header('location: login.php');
 }
 
 if ($_POST) {
-
-	if ($_FILES['foto']['error'] == 0) {
-		$nomeFoto = $_FILES['foto']['name'];
-		$caminhoTmp = $_FILES['foto']['tmp_name'];
-		move_uploaded_file($caminhoTmp,'./assets/img/' . $nomeFoto);
-	}
-		$produtosJson = file_get_contents('./includes/produtos.json');	
-		$arrayProdutos = json_decode($produtosJson, true);
-
-	// Acrescentando id do Produto
-	
-	if (empty($arrayProdutos)) {
-		$id = 0;
-		$arrayProdutos = [];
-	} else {
-		$id = (end($arrayProdutos)['id']) + 1;
-	}
-
-	// Array do novo Produto
-	$novoProduto = [
-		'id' => $id,
-		'nome' => $nome,			
-		'preco' => $preco,			
-		'descricao' => $_POST['descricao'],			
-		'foto' => $nomeFoto	
+    $ok = [
+      'nome' => '',
+      'preco' => '',
+	  'descricao' => '',
+	  'foto' => ''
 	];
 
-	// Salavando novo Produto
-	$arrayProdutos[] = $novoProduto;
+    if (empty($_POST['nome'])) {
+      $ok['nome'] = 'O campo nome é obrigatório';
+    }
 
-	$novoProdutosJson = json_encode($arrayProdutos);
-
-	$salvou = file_put_contents('./includes/produtos.json', $novoProdutosJson);
+    if (empty($_POST['preco'])) {
+      $ok['preco'] = 'O campo preço deve ser numérico';
+    }
 	
-	if ($salvou) {
-		header('Location: indexProdutos.php');
-	}
+    if (empty($_FILES['foto']['name'])) {
+		$erros['foto'] = 'O campo foto é obrigatório';
+	  } else if ($_FILES['foto']['error'] === 0) {
+		$nomeFoto = $_FILES['foto']['name'];
+		$caminhoTmp = $_FILES['foto']['tmp_name'];
+		move_uploaded_file($caminhoTmp, './assets/img/' . $nomeFoto);
+	  }
+
+    if (
+		empty($erros['nome']) &&
+		empty($erros['preco']) &&
+		empty($erros['descricao']) &&
+		empty($erros['foto'])
+	) {
+        
+    $produtosJson = file_get_contents('./includes/produtos.json');
+    $produtosArray = json_decode($produtosJson, true);
+
+    if (empty($produtosArray)) {
+        $produtosArray = [];
+        $novoProduto['id'] = 0;
+    } else {
+        $novoProduto['id'] = ++end($produtosArray)['id'];    
+    }
+
+    $novoProduto = [
+        'id' => $novoProduto['id'],
+        'nome' => $_POST['nome'],
+        'preco' => $_POST['preco'],
+		'descricao' => $_POST['descricao'],
+		'foto' => $nomeFoto,
+    ];
+
+    $produtosArray[] = $novoProduto;
+
+    $novoprodutosJson = json_encode($produtosArray);
+
+    $cadastrou = file_put_contents('./includes/produtos.json', $novoprodutosJson);
+    
+        if ($cadastrou) {
+            header('Location: indexProdutos.php');
+        }
+    }
 }
 
 ?>
@@ -124,28 +115,28 @@ if ($_POST) {
 					name="nome"
 					type="text"
 					id="nome"
-					class="form-control <?php if (!$ok_nome) {echo ('is-invalid');}?>"
+					class="form-control <?php if(isset($erros) && !empty($erros['nome'])) echo 'is-invalid' ?>"
 					placeholder="Digite o nome do Produto"
 					required
 				>
-					<?php if (!$ok_nome): ?>
-						<div class="invalid-feedback">Nome inválido.</div>
-					<?php endif;?>
+				<?php if(isset($erros) && !empty($erros['nome'])) : ?>
+            		<div class="invalid-feedback"><?= $erros['nome'] ?></div>
+          		<?php endif; ?>
 			</div>
 
 			<div class="col-12 my-3">
 				<label for="preco">Preço</label>
 				<input
 					type="number"
-					class="form-control <?php if (!$ok_preco) {echo ('is-invalid');}?>"
+					class="form-control <?php if(isset($erros) && !empty($erros['preco'])) echo 'is-invalid' ?>"
 					name="preco"
 					id="preco"
 					placeholder="Digite o preço do produto"
 					required
 				>
-					<?php if (!$ok_preco): ?>
-						<div class="invalid-feedback">Preço inválido.</div>
-					<?php endif;?>
+				<?php if(isset($erros) && !empty($erros['preco'])) : ?>
+					<div class="invalid-feedback"><?= $erros['preco'] ?></div>
+				<?php endif; ?>
 			</div>
 
 			<div class="col-12 my-3">
@@ -163,7 +154,7 @@ if ($_POST) {
 
 			<div class="form-group col-12 my-3">
 				<label for="foto">Selecione a foto do Produto</label>
-				<input class="form-control-file"
+				<input class="form-control-file <?php if(isset($erros) && !empty($erros['foto'])) echo 'is-invalid' ?>"
 					name="foto"
 					type="file"
 					id="foto"

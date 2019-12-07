@@ -1,5 +1,10 @@
 <?php
-//editProduto.php
+
+session_start();
+if (!$_SESSION['usuario']){
+
+	header('location: login.php');
+}
 
 // Trazendo a lista de Produtos
 $produtosJson = file_get_contents('./includes/produtos.json');	
@@ -12,9 +17,7 @@ foreach($produtos as $produto) {
         $nome = $produto['nome'];
         $preco = $produto['preco'];
         $foto = $produto['foto'];
-        if (!empty($produto['descricao'])) {
-            $descricao = $produto['descricao'];
-        }
+        $descricao = $produto['descricao'];
     }
 }
 
@@ -107,11 +110,11 @@ if ($_POST) {
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-				<div class="navbar-nav w-100 d-flex justify-content-around">
-					<a class="nav-link" href="createUsuario.php">Usuários</a>
-					<a class="nav-link" href="indexProdutos.php">Lista de Produtos</a>
-					<a class="nav-link" href="createProduto.php">Cadastrar Produtos</a>
-					<a class="nav-link" href="logout.php">Logout</a>
+					<div class="navbar-nav w-100 d-flex justify-content-around">
+						<a class="nav-link" href="createUsuario.php">Usuários</a>
+						<a class="nav-link" href="indexProdutos.php">Lista de Produtos</a>
+						<a class="nav-link" href="createProduto.php">Cadastrar Produtos</a>
+						<a class="nav-link" href="logout.php">Logout</a>
 					</div>
 				</div>
 			</div>

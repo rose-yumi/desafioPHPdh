@@ -1,21 +1,22 @@
 <?php
 
-//createUsuario.php
-
 session_start();
+if (!$_SESSION['usuario']){
+	header('location: login.php');
+}
+
 if ($_GET && $_GET['id']) { 
 
     $id = $_GET['id'];
     
-    function searchUsuario($id) {
-        $usuariosJson = file_get_contents('./includes/usuarios.json');
-        $usuariosArray = json_decode($usuariosJson, true);
-        
-        foreach($usuariosArray as $usuario)
-          if ($usuario['id'] == $id)
-            return $usuario;
-        return false;
-    }
+    $usuariosJson = file_get_contents('./includes/usuarios.json');
+    $usuariosArray = json_decode($usuariosJson, true);
+    
+    foreach($usuariosArray as $usuario)
+        if ($usuario['id'] == $id)
+        return $usuario;
+    return false;
+
 }
 
 if ($_POST) {
@@ -96,6 +97,14 @@ if ($_POST) {
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+					<div class="navbar-nav w-100 d-flex justify-content-around">
+						<a class="nav-link" href="createUsuario.php">Usuários</a>
+						<a class="nav-link" href="indexProdutos.php">Lista de Produtos</a>
+						<a class="nav-link" href="createProduto.php">Cadastrar Produtos</a>
+						<a class="nav-link" href="logout.php">Logout</a>
+					</div>
+				</div>
 			</div>
 		</nav>
     </header>
@@ -105,6 +114,7 @@ if ($_POST) {
         <div class="col-12">
             <h5 class="display-7 text-center mt-3">Editar dados do Usuário</h5>
             <form method = 'POST'>
+                <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
                 <div class="form-group mt-3">
                     <label for="exampleInputEmail1">Nome</label>
                     <input
@@ -163,7 +173,10 @@ if ($_POST) {
                         <div class="invalid-feedback"><?= $ok['confirmarSenha'] ?></div>
                     <?php endif; ?>
                 </div>
-                <button type="submit" class="btn btn-secondary mb-2">Editar</button>
+                <div class="row">
+                <a href="createUsuario.php" class="btn btn-secondary mx-auto">Voltar</a>
+                <button type="submit" class="btn btn-danger mx-auto">Editar</button>
+                </div>
             </form>
         </div>  
     </div>

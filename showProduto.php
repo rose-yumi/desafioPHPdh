@@ -1,14 +1,12 @@
 <?php
-//showProduto.php
 
 $produtosJson = file_get_contents('./includes/produtos.json');
-		
 $arrayProdutos = json_decode($produtosJson, true);
 
 $id = $_GET['id'];
-// print_r($id);
+
 $produtos = $arrayProdutos[$id];
-// print_r($produtos);
+
 
 if ($_POST) {
 
@@ -52,7 +50,7 @@ if ($_POST) {
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div class="navbar-nav w-100 d-flex justify-content-around">
 					<a class="nav-link" href="createUsuario.php">Usuários</a>
-                    <a class="nav-link" href="indexProdutos.php">Lista de Produtos</a>
+					<a class="nav-item nav-link active" href="indexProdutos.php">Lista de Produtos<span class="sr-only">(current)</span></a>
 					<a class="nav-link" href="createProduto.php">Cadastrar Produtos</a>
 					<a class="nav-link" href="logout.php">Logout</a>
 					</div>
@@ -63,21 +61,25 @@ if ($_POST) {
 
 	<!-- Informações do Produto -->
 	<div class="container my-4">
-        <div class="col-md-12 mx-auto">
-            <div class="card">
-                <img src="./assets/img/<?= $produtos['foto'] ?>" class="card-img-top w-40" alt="...">
-                <div class="card-body">
-                    <h4 class="card-title"><?= $produtos['nome'] ?></h4>
-                    <p class="card-text"><?= $produtos['descricao'] ?></p>
-                    <h5 class="pb-5">R$ <?= $produtos['preco'] ?></h5>
-                    <form action="" method="POST" class="d-flex justify-content-around">
-                        <input type="hidden" name="id" value="<?= $_GET['id'] ?>">
-                        <a href="indexProdutos.php" class="btn btn-secondary">Voltar</a>
-                        <button type="submit" class="btn btn-danger ml-4">Excluir</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+		<div class="card mb-3">
+			<div class="row no-gutters">
+				<div class="col-md-5">
+					<img src="./assets/img/<?= $produtos['foto'] ?>" class="card-img" alt="...">
+				</div>
+				<div class="col-md-7">
+					<div class="card-body">
+						<h4 class="card-title"><?= $produtos['nome'] ?></h4>
+						<p class="card-text"><?= $produtos['descricao'] ?></p>
+						<h5 class="pb-5">R$ <?= $produtos['preco'] ?></h5>
+						<form action="" method="POST" class="d-flex justify-content-around">
+							<input type="hidden" name="id" value="<?= $_GET['id'] ?>">
+							<a href="indexProdutos.php" class="btn btn-secondary">Voltar</a>
+							<button type="submit" class="btn btn-danger ml-4">Excluir</button>
+                    	</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<!-- Bootstrap -->
